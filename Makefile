@@ -17,7 +17,7 @@ local-migration-down:
 sql-show:
 	docker exec -it 883067b55695 psql -U user -d user-service
 
-swagger:
+swagger-init:
 	swag init -g internal/app/app.go
 
 test:
