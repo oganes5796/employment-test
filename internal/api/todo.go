@@ -5,17 +5,20 @@ import (
 	"github.com/oganes5796/employment-test/internal/domain"
 )
 
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
+
 // @Summary Создание задачи
 // @Description Создаёт новую задачу
-// @Tags tasks
+// @Tags todo
 // @Accept json
 // @Produce json
-// @Param task body models.Task true "Детали задачи"
-// @Success 201 {object} models.Task
-// @Failure 400 {object} fiber.Map "Некорректный запрос"
-// @Failure 500 {object} fiber.Map "Ошибка сервера"
-// @Router /tasks [post]
-
+// @Param task body domain.Todo true "Детали задачи"
+// @Success 201 {object} domain.Todo
+// @Failure 400 {object} ErrorResponse "Некорректный запрос"
+// @Failure 500 {object} ErrorResponse "Ошибка сервера"
+// @Router /todo [post]
 func (i *Implementation) CreateTodo(c *fiber.Ctx) error {
 	var input domain.Todo
 	if err := c.BodyParser(&input); err != nil {
@@ -32,12 +35,11 @@ func (i *Implementation) CreateTodo(c *fiber.Ctx) error {
 
 // @Summary Получение списка задач
 // @Description Возвращает список всех задач
-// @Tags tasks
+// @Tags todo
 // @Produce json
-// @Success 200 {array} models.Task
-// @Failure 500 {object} fiber.Map "Ошибка сервера"
-// @Router /tasks [get]
-
+// @Success 200 {array} domain.Todo
+// @Failure 500 {object} ErrorResponse "Ошибка сервера"
+// @Router /todo [get]
 func (i *Implementation) GetTodo(c *fiber.Ctx) error {
 	todo, err := i.todoService.GetAll(c.Context())
 	if err != nil {
@@ -49,16 +51,15 @@ func (i *Implementation) GetTodo(c *fiber.Ctx) error {
 
 // @Summary Обновление задачи
 // @Description Обновляет данные о задаче
-// @Tags tasks
+// @Tags todo
 // @Accept json
 // @Produce json
 // @Param id path int true "ID задачи"
-// @Param task body models.Task true "Обновлённые данные задачи"
+// @Param task body domain.Todo true "Обновлённые данные задачи"
 // @Success 200
-// @Failure 400 {object} fiber.Map "Некорректный ID"
-// @Failure 500 {object} fiber.Map "Ошибка сервера"
-// @Router /tasks/{id} [put]
-
+// @Failure 400 {object} ErrorResponse "Некорректный ID"
+// @Failure 500 {object} ErrorResponse "Ошибка сервера"
+// @Router /todo/{id} [put]
 func (i *Implementation) UpdateTodo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var input domain.Todo
@@ -76,13 +77,12 @@ func (i *Implementation) UpdateTodo(c *fiber.Ctx) error {
 
 // @Summary Удаление задачи
 // @Description Удаляет задачу по ID
-// @Tags tasks
+// @Tags todo
 // @Param id path int true "ID задачи"
 // @Success 204
-// @Failure 400 {object} fiber.Map "Некорректный ID"
-// @Failure 500 {object} fiber.Map "Ошибка сервера"
-// @Router /tasks/{id} [delete]
-
+// @Failure 400 {object} ErrorResponse "Некорректный ID"
+// @Failure 500 {object} ErrorResponse "Ошибка сервера"
+// @Router /todo/{id} [delete]
 func (i *Implementation) DeleteTodo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	err := i.todoService.Delete(c.Context(), id)

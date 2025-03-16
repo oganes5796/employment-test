@@ -13,20 +13,12 @@ import (
 	"github.com/oganes5796/employment-test/pkg/logger"
 )
 
-// @title Todo API
+// @title Todo App API
 // @version 1.0
-// @description This is a sample server for a todo application.
-// @termsOfService http://swagger.io/terms/
-
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @description API Server for TodoList Application
 
 // @host localhost:8080
-// @BasePath /api/v1
+// @BasePath /
 
 func Run(ctx context.Context) error {
 	// TODO: init config
@@ -35,28 +27,22 @@ func Run(ctx context.Context) error {
 		return err
 	}
 
-	// TODO: init logger
 	cfg := config.DefaultLoggerConfig()
 	logger.InitLogger(cfg)
 	defer logger.Sync()
 
-	// TODO: init db
 	pool, err := db.NewPostgresPool(os.Getenv("PG_DSN"))
 	if err != nil {
 		return err
 	}
 	defer pool.Close()
 
-	// TODO: init repository
 	repo := repoTodo.NewRepository(pool)
 
-	// TODO: init service
 	service := servTodo.NewService(repo)
 
-	// TODO: init handler
 	handler := api.NewImplementation(service)
 
-	// TODO: init router
 	app := handler.InitRoutes()
 
 	logger.Info("Server is running on port" + os.Getenv("LOCAL_PORT"))

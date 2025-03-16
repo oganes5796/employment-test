@@ -1,16 +1,133 @@
-basePath: /api/v1
+basePath: /
+definitions:
+  api.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  domain.Todo:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      status:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
 host: localhost:8080
 info:
-  contact:
-    email: support@swagger.io
-    name: API Support
-    url: http://www.swagger.io/support
-  description: This is a sample server for a todo application.
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
-  title: Todo API
+  contact: {}
+  description: API Server for TodoList Application
+  title: Todo App API
   version: "1.0"
-paths: {}
+paths:
+  /todo:
+    get:
+      description: Возвращает список всех задач
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Todo'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Получение списка задач
+      tags:
+      - todo
+    post:
+      consumes:
+      - application/json
+      description: Создаёт новую задачу
+      parameters:
+      - description: Детали задачи
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Todo'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Todo'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Создание задачи
+      tags:
+      - todo
+  /todo/{id}:
+    delete:
+      description: Удаляет задачу по ID
+      parameters:
+      - description: ID задачи
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Некорректный ID
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Удаление задачи
+      tags:
+      - todo
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные о задаче
+      parameters:
+      - description: ID задачи
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновлённые данные задачи
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Todo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Некорректный ID
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Обновление задачи
+      tags:
+      - todo
 swagger: "2.0"

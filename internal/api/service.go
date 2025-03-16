@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/swagger"
 	"github.com/oganes5796/employment-test/internal/service"
 )
 
@@ -24,6 +25,8 @@ func (i *Implementation) InitRoutes() *fiber.App {
 	app.Get("/todo", i.GetTodo)
 	app.Put("/todo/:id", i.UpdateTodo)
 	app.Delete("/todo/:id", i.DeleteTodo)
+
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	return app
 }
